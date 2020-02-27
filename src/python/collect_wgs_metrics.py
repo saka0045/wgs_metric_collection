@@ -12,11 +12,15 @@ def main():
     parser.add_argument(
         "-s", "--sampleTextFile", dest="sample_text_file", required=True
     )
+    parser.add_argument(
+        "-m", "--metricFile", dest="config_metric_file", required=True
+    )
 
     args = parser.parse_args()
 
     sample_text_file_path = os.path.abspath(args.sample_text_file)
     input_directory = os.path.abspath(args.input_directory)
+    config_metric_file_path = os.path.abspath(args.config_metric_file)
 
     # Gather sample information
     sample_text_file = open(sample_text_file_path, "r")
@@ -28,11 +32,13 @@ def main():
 
     # Initialize the WGS metric dict
     wgs_metric_dict = {}
+    sample_list = []
 
     for key in sample_information_dict.keys():
         # Loop through the samples and gather metrics for the sample
         if key != "caseId":
             sample_name = sample_information_dict[key]
+            sample_list.append(sample_name)
             # Initialize each sample entry for wgs_metric_dict
             wgs_metric_dict[sample_name] = {}
             # Gather metrics for each sample
@@ -47,7 +53,51 @@ def main():
     joint_snv_metric_file_path = input_directory + "/" + case_id + "-joint-snv.vc_metrics.csv"
     collect_metrics(joint_snv_metric_file_path, "NA", wgs_metric_dict, "JOINT CALLER POSTFILTER")
 
-    print(wgs_metric_dict)
+    # Write the desired metrics out to a file
+    result_file = open(input_directory + "/wgs_metrics.csv", "w")
+    # Write header
+    for sample in sample_list:
+        result_file.write("," + sample)
+    result_file.write("\n")
+    # Fill out the file with desire metrics
+    # Open the metric file to gather which metrics need to be written to the result file
+    config_metric_file = open(config_metric_file_path, "r")
+    for line in config_metric_file:
+        line = line.rstrip()
+        config_metric_line_item = line.split(",")
+        metric_header = config_metric_line_item[0]
+        metric_category = config_metric_line_item[1]
+        metric = config_metric_line_item[2]
+        metric_type = config_metric_line_item[3]
+        write_metric_to_result_file(result_file, sample_list, wgs_metric_dict, metric_header, metric_category, metric,
+                                    metric_type)
+
+    config_metric_file.close()
+    result_file.close()
+
+
+def write_metric_to_result_file(result_file, sample_list, wgs_metric_dict, metric_header, metric_category, metric,
+                                metric_type):
+    """
+    Parses the wgs_metric_dict and creates the result file
+    :param result_file:
+    :param sample_list:
+    :param wgs_metric_dict:
+    :param metric_header: String, the metric name to use for the file
+    :param metric_category: String, the metric category found in the metric cvs file the metric belongs to
+    :param metric: String, the metric to be pulled
+    :param metric_type: String, count or percent. Count is the first number stored in the list and percent is stored
+    second
+    :return:
+    """
+    result_file.write(metric_header)
+    if metric_type == "count":
+        metric_type = 0
+    elif metric_type == "percent":
+        metric_type = 1
+    for sample in sample_list:
+        result_file.write("," + wgs_metric_dict[sample][metric_category][metric][metric_type])
+    result_file.write("\n")
 
 
 def gather_metrics_for_sample(input_directory, sample_name, wgs_metric_dict):
