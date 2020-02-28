@@ -53,6 +53,9 @@ def main():
     joint_snv_metric_file_path = input_directory + "/" + case_id + "-joint-snv.vc_metrics.csv"
     collect_metrics(joint_snv_metric_file_path, "NA", wgs_metric_dict, "JOINT CALLER POSTFILTER")
 
+    # Calculate the trio concordance
+    calculate_trio_concordance(sample_information_dict, wgs_metric_dict)
+
     # Write the desired metrics out to a file
     result_file = open(input_directory + "/wgs_metrics.csv", "w")
     # Write header
@@ -74,6 +77,41 @@ def main():
 
     config_metric_file.close()
     result_file.close()
+
+    print("script is finished running")
+
+
+def calculate_trio_concordance(sample_information_dict, wgs_metric_dict):
+    """
+    Calculates the trio concordance from the joint vc metric file
+    Current TSSS version doesn't account for DeNovo chr X and chr Y SNPs but will in the future
+    This script will take into account the DeNovo chr X and chr Y SNP counts
+    :param sample_information_dict:
+    :param wgs_metric_dict:
+    :return:
+    """
+    # Identify the proband, mother and father samples
+    proband_sample_list = []
+    for key in sample_information_dict.keys():
+        if key == "proband":
+            proband_sample_list.append(sample_information_dict[key])
+        elif key == "mother":
+            mother_sample = sample_information_dict[key]
+        elif key == "father":
+            father_sample = sample_information_dict[key]
+    for proband in proband_sample_list:
+        joint_post_filter_denovo_count = (
+                int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["DeNovo Autosome SNPs"][0]) +
+                int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["DeNovo chrX SNPs"][0]) +
+                int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["DeNovo chrY SNPs"][0])
+        )
+        joint_post_filter_snp_count = int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["SNPs"][0])
+        trio_concordance = (1 - (joint_post_filter_denovo_count / joint_post_filter_snp_count)) * 100
+        # Write the trio concordance results to wgs_metric_dict
+        wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = [str(trio_concordance), ""]
+    # Fill out parents trio concordance as "NA"
+    wgs_metric_dict[mother_sample]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]
+    wgs_metric_dict[father_sample]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]
 
 
 def write_metric_to_result_file(result_file, sample_list, wgs_metric_dict, metric_header, metric_category, metric,

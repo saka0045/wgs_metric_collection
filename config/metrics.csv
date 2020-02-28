@@ -1,3 +1,29 @@
-Percent Q30 bases,MAPPING/ALIGNING SUMMARY,Q30 bases,percent
-Percent Q30 bases read 1,MAPPING/ALIGNING SUMMARY,Q30 bases R1,percent
-Percent Q30 bases read 2,MAPPING/ALIGNING SUMMARY,Q30 bases R2,percent
+Percent Q30 Bases,MAPPING/ALIGNING SUMMARY,Q30 bases,percent
+Percent Q30 Bases read 1,MAPPING/ALIGNING SUMMARY,Q30 bases R1,percent
+Percent Q30 Bases read 2,MAPPING/ALIGNING SUMMARY,Q30 bases R2,percent
+Total Mapped Reads,MAPPING/ALIGNING SUMMARY,Mapped reads,count
+Percent Mapped Reads,MAPPING/ALIGNING SUMMARY,Mapped reads,percent
+Percent Duplicated Mapped Reads,MAPPING/ALIGNING SUMMARY,Number of duplicate marked reads,percent
+Fragment Length Median,MAPPING/ALIGNING SUMMARY,Insert length: median,count
+Fragment Length Mean,MAPPING/ALIGNING SUMMARY,Insert length: mean,count
+Fragment Length Standard Deviation,MAPPING/ALIGNING SUMMARY,Insert length: standard deviation,count
+Percent Coverage 0x - 1x,COVERAGE SUMMARY,PCT of genome with coverage [  0x:  1x),count
+Percent Coverage 1x - 3x,COVERAGE SUMMARY,PCT of genome with coverage [  1x:  3x),count
+Percent Coverage 3x - 10x,COVERAGE SUMMARY,PCT of genome with coverage [  3x: 10x),count
+Percent Coverage 10x - 15x,COVERAGE SUMMARY,PCT of genome with coverage [ 10x: 15x),count
+Percent Coverage 15x - 20x,COVERAGE SUMMARY,PCT of genome with coverage [ 15x: 20x),count
+Percent Coverage 20x - 50x,COVERAGE SUMMARY,PCT of genome with coverage [ 20x: 50x),count
+Percent Coverage 50x - 100x,COVERAGE SUMMARY,PCT of genome with coverage [ 50x:100x),count
+Percent Coverage 100x +,COVERAGE SUMMARY,PCT of genome with coverage [100x: inf),count
+SNVs (All),JOINT CALLER POSTFILTER,SNPs,count
+SNV Het/Hom Ratio,JOINT CALLER POSTFILTER,Het/Hom ratio,count
+SNV Ti/Tv Ratio,JOINT CALLER POSTFILTER,Ti/Tv ratio,count
+Total Variants in VCF,JOINT CALLER POSTFILTER,Total,count
+Percent Callability,VARIANT CALLER POSTFILTER,Percent Callability,count
+Percent Autosome Callability,VARIANT CALLER POSTFILTER,Percent Autosome Callability,count
+Percent Exome Callability,VARIANT CALLER POSTFILTER,Percent Autosome Exome Callability,count
+Percent Read Pairs Mapped to Different Chromosomes,MAPPING/ALIGNING SUMMARY,Paired reads mapped to different chromosomes (MAPQ>=10),percent
+Percent Mismatched Base Read 1,MAPPING/ALIGNING SUMMARY,Mismatched bases R1,percent
+Percent Mismatched Base Read 2,MAPPING/ALIGNING SUMMARY,Mismatched bases R2,percent
+Gender Check Against Reported Gender,COVERAGE SUMMARY,Predicted sex chromosome ploidy,count
+Trio Concordance Check,JOINT CALLER POSTFILTER,Trio Concordance,count
