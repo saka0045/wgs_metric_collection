@@ -53,11 +53,12 @@ def main():
     joint_snv_metric_file_path = input_directory + "/" + case_id + "-joint-snv.vc_metrics.csv"
     collect_metrics(joint_snv_metric_file_path, "NA", wgs_metric_dict, "JOINT CALLER POSTFILTER")
 
-    # Calculate the trio concordance
-    calculate_trio_concordance(sample_information_dict, wgs_metric_dict)
+    # Calculate the trio concordance if appropriate
+    if "mother" in sample_information_dict.keys() or "father" in sample_information_dict.keys():
+        calculate_trio_concordance(sample_information_dict, wgs_metric_dict)
 
     # Write the desired metrics out to a file
-    result_file = open(input_directory + "/wgs_metrics.csv", "w")
+    result_file = open(input_directory + "/" + case_id + "_wgs_metrics.csv", "w")
     # Write header
     for sample in sample_list:
         result_file.write("," + sample)
