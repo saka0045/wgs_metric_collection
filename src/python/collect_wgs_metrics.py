@@ -104,15 +104,19 @@ def calculate_trio_concordance(sample_information_dict, wgs_metric_dict):
         elif key == "father":
             father_sample = sample_information_dict[key]
     for proband in proband_sample_list:
-        joint_post_filter_denovo_count = (
-                int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["DeNovo Autosome SNPs"][0]) +
-                int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["DeNovo chrX SNPs"][0]) +
-                int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["DeNovo chrY SNPs"][0])
-        )
-        joint_post_filter_snp_count = int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["SNPs"][0])
-        trio_concordance = (1 - (joint_post_filter_denovo_count / joint_post_filter_snp_count)) * 100
-        # Write the trio concordance results to wgs_metric_dict
-        wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = [str(trio_concordance), ""]
+        try:
+            joint_post_filter_denovo_count = (
+                    int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["DeNovo Autosome SNPs"][0]) +
+                    int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["DeNovo chrX SNPs"][0]) +
+                    int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["DeNovo chrY SNPs"][0])
+            )
+            joint_post_filter_snp_count = int(wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["SNPs"][0])
+            trio_concordance = (1 - (joint_post_filter_denovo_count / joint_post_filter_snp_count)) * 100
+            # Write the trio concordance results to wgs_metric_dict
+            wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = [str(trio_concordance), ""]
+        # If no "DeNovo ..." key exists:
+        except KeyError:
+            wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]
     # Fill out parents trio concordance as "NA"
     wgs_metric_dict[mother_sample]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]
     wgs_metric_dict[father_sample]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]

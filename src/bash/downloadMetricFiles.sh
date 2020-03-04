@@ -24,7 +24,7 @@ Parameters:
 	-h [optional] debug - option to print this menu option
 
 Usage:
-$0 -s {sample_txt_file} -o {output_dir}
+$0 -s {sample_txt_file} -o {output_dir} -r {remote_path}
 DOCS
 
 #Show help when no parameters are provided
