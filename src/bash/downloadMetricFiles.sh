@@ -108,8 +108,8 @@ CASE_ID_FILE="${OUTPUT_DIR}/caseId.txt"
 SAMPLE_NAMES_FILE="${OUTPUT_DIR}/sample_names.txt"
 
 source ${CASE_ID_FILE}
-echo "Case ID for case to download from TSSS is: ${CASE_ID}"
 
+echo "Begin downloading metric files"
 # Download metric files for each sample
 while IFS= read -r SAMPLE; do
     MAPPING_METRIC_FILE="${REMOTE_PATH}/${SAMPLE}/dragen/${SAMPLE}.mapping_metrics.csv"
@@ -129,8 +129,25 @@ while IFS= read -r SAMPLE; do
     FILE_DOWNLOAD_JOBS+=("${JOB_ID}")
 done < "${SAMPLE_NAMES_FILE}"
 
+# Download joint vc metric file
+JOINT_SNV_METRIC_FILE="${REMOTE_PATH}/jointGt/snv/${CASE_ID}-joint-snv.vc_metrics.csv"
+CMD="${QSUB} ${QSUB_ARGS} ${ILLUMINA_WRAPPER_SCRIPT} -c download -r ${JOINT_SNV_METRIC_FILE} -o ${OUTPUT_DIR}"
+echo "Executing command: ${CMD}"
+JOB_ID=$(${CMD})
+FILE_DOWNLOAD_JOBS+=("${JOB_ID}")
+
 for JOB_ID in ${FILE_DOWNLOAD_JOBS[@]:-}; do
     waitForJob ${JOB_ID} 3600 20
 done
 
 echo "All files downloaded"
+
+# Process the metric files and create one metric file
+echo "Processing metric files"
+CONFIG_METRIC_FILE="${ROOT}/config/metrics.csv"
+CMD="${PYTHON} ${PYTHON_SCRIPTS}/collect_wgs_metrics.py -s ${SAMPLE_TEXT_FILE} -i ${OUTPUT_DIR} -m ${CONFIG_METRIC_FILE}"
+echo "Executing command: ${CMD}"
+${CMD}
+
+echo "Metric files has been processed"
+echo "Resulting metric file has been saved in: ${OUTPUT_DIR}/${CASE_ID}_wgs_metrics.csv"
