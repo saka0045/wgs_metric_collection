@@ -41,7 +41,7 @@ SCRIPT_FILE="${SCRIPT_DIR}/$(basename "${BASH_SOURCE[0]}")"
 SCRIPT_NAME="$(basename ${0})"
 ROOT="$(cd "${SCRIPT_DIR}/../../" && pwd)"
 PYTHON_SCRIPTS="${ROOT}/src/python"
-PROFILE="${ROOT}/config/downloadMetricFiles.profile"
+PROFILE="${ROOT}/config/downloadMetricFile.profile"
 SAMPLE_TEXT_FILE=""
 OUTPUT_DIR=""
 CMD=""
@@ -77,13 +77,13 @@ set -o nounset
 #BEGIN PROCESSING
 ##################################################
 
-while getopts "hc:f:i:s:o:r:" OPTION
+while getopts "hs:o:" OPTION
 do
     case $OPTION in
-        h) echo "${DOCS}" ; rm ${LOG_FILE} ; exit ;;
+        h) echo "${DOCS}" ;  exit ;;
         s) SAMPLE_TEXT_FILE=${OPTARG} ;;
         o) OUTPUT_DIR=${OPTARG} ;;
-        ?) echo "${DOCS}" ; rm ${LOG_FILE} ; exit ;;
+        ?) echo "${DOCS}" ; exit ;;
     esac
 done
 
