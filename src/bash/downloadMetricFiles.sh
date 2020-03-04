@@ -95,8 +95,9 @@ do
     esac
 done
 
-# Remove any trailing "/" from OUTPUT_DIR
+# Remove any trailing "/" from OUTPUT_DIR and REMOTE_PATH
 OUTPUT_DIR=${OUTPUT_DIR%/}
+REMOTE_PATH=${REMOTE_PATH%/}
 
 # Process the samples.txt file to create sample_names.txt and caseId.txt files
 CMD="${PYTHON} ${PYTHON_SCRIPTS}/process_samples_file.py -s ${SAMPLE_TEXT_FILE} -o ${OUTPUT_DIR}"
