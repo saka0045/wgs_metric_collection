@@ -45,6 +45,7 @@ PROFILE="${ROOT}/config/downloadMetricFile.profile"
 SAMPLE_TEXT_FILE=""
 OUTPUT_DIR=""
 CMD=""
+CASE_ID=""
 
 ##################################################
 #Source Pipeline Profile
@@ -90,3 +91,14 @@ done
 CMD="${PYTHON} ${PYTHON_SCRIPTS}/process_samples_file.py -s ${SAMPLE_TEXT_FILE} -o ${OUTPUT_DIR}"
 echo "Executing command: ${CMD}"
 ${CMD}
+
+CASE_ID_FILE="${OUTPUT_DIR}/caseId.txt"
+SAMPLE_NAMES_FILE="${OUTPUT_DIR}/sample_names.txt"
+
+source ${CASE_ID_FILE}
+echo "Case ID for case to download from TSSS is: ${CASE_ID}"
+
+# Download metric files for each sample
+while IFS= read -r LINE; do
+    echo ${LINE}
+done < "${SAMPLE_NAMES_FILE}"
