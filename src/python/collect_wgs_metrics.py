@@ -118,8 +118,14 @@ def calculate_trio_concordance(sample_information_dict, wgs_metric_dict):
         except KeyError:
             wgs_metric_dict[proband]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]
     # Fill out parents trio concordance as "NA"
-    wgs_metric_dict[mother_sample]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]
-    wgs_metric_dict[father_sample]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]
+    try:
+        wgs_metric_dict[mother_sample]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]
+    except UnboundLocalError:
+        pass
+    try:
+        wgs_metric_dict[father_sample]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]
+    except UnboundLocalError:
+        pass
 
 
 def write_metric_to_result_file(result_file, sample_list, wgs_metric_dict, metric_header, metric_category, metric,
