@@ -56,6 +56,9 @@ def main():
     # Calculate the trio concordance if appropriate
     if "mother" in sample_information_dict.keys() or "father" in sample_information_dict.keys():
         calculate_trio_concordance(sample_information_dict, wgs_metric_dict)
+    else:
+        for sample in sample_list:
+            wgs_metric_dict[sample]["JOINT CALLER POSTFILTER"]["Trio Concordance"] = ["NA", ""]
 
     # Write the desired metrics out to a file
     result_file = open(input_directory + "/" + case_id + "_wgs_metrics.csv", "w")
