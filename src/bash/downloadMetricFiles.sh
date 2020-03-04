@@ -99,15 +99,20 @@ done
 OUTPUT_DIR=${OUTPUT_DIR%/}
 REMOTE_PATH=${REMOTE_PATH%/}
 
-# Process the samples.txt file to create sample_names.txt and caseId.txt files
+# Process the samples.txt file to create sample_names.txt
 CMD="${PYTHON} ${PYTHON_SCRIPTS}/process_samples_file.py -s ${SAMPLE_TEXT_FILE} -o ${OUTPUT_DIR}"
 echo "Executing command: ${CMD}"
 ${CMD}
 
-CASE_ID_FILE="${OUTPUT_DIR}/caseId.txt"
 SAMPLE_NAMES_FILE="${OUTPUT_DIR}/sample_names.txt"
 
-source ${CASE_ID_FILE}
+# Get the CASE_ID from REMOTE_PATH
+# Case ID is the second to the last string of remote path separated by "/"
+CASE_ID=$(echo "${REMOTE_PATH}" | awk -F "/" '{print $(NF-1)}')
+echo "Case ID is: ${CASE_ID}"
+
+# Append the case ID to samples.txt
+echo "caseId:${CASE_ID}" >> ${SAMPLE_TEXT_FILE}
 
 echo "Begin downloading metric files"
 # Download metric files for each sample
@@ -148,6 +153,9 @@ CONFIG_METRIC_FILE="${ROOT}/config/metrics.csv"
 CMD="${PYTHON} ${PYTHON_SCRIPTS}/collect_wgs_metrics.py -s ${SAMPLE_TEXT_FILE} -i ${OUTPUT_DIR} -m ${CONFIG_METRIC_FILE}"
 echo "Executing command: ${CMD}"
 ${CMD}
+
+# Remove sample_names.txt file
+rm ${OUTPUT_DIR}/sample_names.txt
 
 echo "Metric files has been processed"
 echo "Resulting metric file has been saved in: ${OUTPUT_DIR}/${CASE_ID}_wgs_metrics.csv"

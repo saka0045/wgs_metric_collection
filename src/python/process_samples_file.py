@@ -22,19 +22,13 @@ def main():
     sample_information_dict = parse_sample_text_file(sample_text_file)
 
     sample_name_file = open(output_directory + "/sample_names.txt", "w")
-    case_id_file = open(output_directory + "/caseId.txt", "w")
 
     for key, val in sample_information_dict.items():
-        if key == "caseId":
-            case_id_file.write("CASE_ID=\"" + val + "\"")
-            case_id_file.write("\n")
-        else:
-            sample_name_file.write(val)
-            sample_name_file.write("\n")
+        sample_name_file.write(val)
+        sample_name_file.write("\n")
 
     sample_text_file.close()
     sample_name_file.close()
-    case_id_file.close()
 
 
 def parse_sample_text_file(sample_text_file):
