@@ -20,6 +20,7 @@ Script to download metric files from TSSS and process the files to create a sing
 Parameters:
 	-s [required] sample-text-file - full path to the samples.txt file
 	-o [required] output-dir - local output directory to save files
+	-r [required] remote-path - output directory to TSSS case with the metric files
 	-h [optional] debug - option to print this menu option
 
 Usage:
@@ -46,6 +47,10 @@ SAMPLE_TEXT_FILE=""
 OUTPUT_DIR=""
 CMD=""
 CASE_ID=""
+REMOTE_PATH=""
+MAPPING_METRIC_FILE=""
+WGS_COVERAGE_METRIC_FILE=""
+INDIVIDUAL_VC_METRIC_FILE=""
 
 ##################################################
 #Source Pipeline Profile
@@ -78,12 +83,13 @@ set -o nounset
 #BEGIN PROCESSING
 ##################################################
 
-while getopts "hs:o:" OPTION
+while getopts "hs:o:r:" OPTION
 do
     case $OPTION in
         h) echo "${DOCS}" ;  exit ;;
         s) SAMPLE_TEXT_FILE=${OPTARG} ;;
         o) OUTPUT_DIR=${OPTARG} ;;
+        r) REMOTE_PATH=${OPTARG} ;;
         ?) echo "${DOCS}" ; exit ;;
     esac
 done
@@ -99,6 +105,17 @@ source ${CASE_ID_FILE}
 echo "Case ID for case to download from TSSS is: ${CASE_ID}"
 
 # Download metric files for each sample
-while IFS= read -r LINE; do
-    echo ${LINE}
+while IFS= read -r SAMPLE; do
+    MAPPING_METRIC_FILE="${REMOTE_PATH}/${SAMPLE}/dragen/${SAMPLE}.mapping_metrics.csv"
+    WGS_COVERAGE_METRIC_FILE="${REMOTE_PATH}/${SAMPLE}/dragen/${SAMPLE}.wgs_coverage_metrics.csv"
+    INDIVIDUAL_VC_METRIC_FILE="${REMOTE_PATH}/${SAMPLE}/dragen/${SAMPLE}.vc_metrics.csv"
+    CMD="${ILLUMINA_WRAPPER_SCRIPT} -c download -r ${MAPPING_METRIC_FILE} -o ${OUTPUT_DIR}"
+    echo "Executing command: ${CMD}"
+    ${CMD}
+    CMD="${ILLUMINA_WRAPPER_SCRIPT} -c download -r ${WGS_COVERAGE_METRIC_FILE} -o ${OUTPUT_DIR}"
+    echo "Executing command: ${CMD}"
+    ${CMD}
+    CMD="${ILLUMINA_WRAPPER_SCRIPT} -c download -r ${INDIVIDUAL_VC_METRIC_FILE} -o ${OUTPUT_DIR}"
+    echo "Executing command: ${CMD}"
+    ${CMD}
 done < "${SAMPLE_NAMES_FILE}"
