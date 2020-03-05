@@ -62,6 +62,11 @@ def main():
     # Write header
     for sample in sample_list:
         result_file.write("," + sample)
+    result_file.write("\nPedigree Status")
+    for sample in sample_list:
+        for key, val in sample_information_dict:
+            if val == sample:
+                result_file.write("," + key)
     result_file.write("\n")
     # Fill out the file with desire metrics
     # Open the metric file to gather which metrics need to be written to the result file
