@@ -24,7 +24,8 @@ def main():
     sample_information_dict = parse_sample_text_file(sample_text_file)
     # If there are case IDs already present in the samples.txt file, abort
     if "caseId" in sample_information_dict.keys():
-        sys.exit()
+        print("Case ID already exists in samples.txt file, aborting")
+        sys.exit(1)
 
     # Write just the sample names to sample_names.txt for easier bash handling
     sample_name_file = open(output_directory + "/sample_names.txt", "w")
