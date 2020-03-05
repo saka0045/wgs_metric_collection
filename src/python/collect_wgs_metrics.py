@@ -63,8 +63,9 @@ def main():
     for sample in sample_list:
         result_file.write("," + sample)
     result_file.write("\nPedigree Status")
+    # Write pedigree status
     for sample in sample_list:
-        for key, val in sample_information_dict:
+        for key, val in sample_information_dict.items():
             if val == sample:
                 result_file.write("," + key)
     result_file.write("\n")
