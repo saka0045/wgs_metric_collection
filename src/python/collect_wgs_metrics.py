@@ -2,6 +2,7 @@
 
 import argparse
 import os
+from process_samples_file import parse_sample_text_file
 
 
 def main():
@@ -24,11 +25,7 @@ def main():
 
     # Gather sample information
     sample_text_file = open(sample_text_file_path, "r")
-    sample_information_dict = {}
-    for line in sample_text_file:
-        line = line.rstrip()
-        line_item = line.split(":")
-        sample_information_dict[line_item[0]] = line_item[1]
+    sample_information_dict = parse_sample_text_file(sample_text_file)
 
     # Initialize the WGS metric dict
     wgs_metric_dict = {}
